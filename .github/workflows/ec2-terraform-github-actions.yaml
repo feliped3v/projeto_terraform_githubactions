@@ -1,0 +1,33 @@
+name: Minha EC2 com terraform e GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-ec2-terraform:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy EC2 + checkout@v3GitHub Actions + Terraform
+        uses: actions/checkout@v5
+
+      - name: Iniciando o Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Iniciando o terraform
+        run: terraform init
+      
+      - name: Iniciando o plan do terraform
+        run: terraform plan
+
+      - name: Iniciando o apply
+        run: terraform apply -auto-approve
