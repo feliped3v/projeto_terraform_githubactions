@@ -1,4 +1,4 @@
-name: Minha EC2 com terraform e GitHub Actions
+name: Terraform + GitHub Actions
 
 on:
   push:
