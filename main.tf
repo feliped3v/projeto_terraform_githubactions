@@ -105,6 +105,7 @@ resource "aws_route_table" "rt-priv" {
 
   route {
     cidr_block = "10.0.1.0/24"
+    gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
     Name = "rt-priv"
