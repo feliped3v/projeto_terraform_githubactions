@@ -100,18 +100,6 @@ resource "aws_route_table" "rt-pub" {
   }
 }
 
-resource "aws_route_table" "rt-priv" {
-  vpc_id = aws_vpc.main_vpc.id
-
-  route {
-    cidr_block = "10.0.1.0/24"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-  tags = {
-    Name = "rt-priv"
-  }
-}
-
 resource "aws_route_table_association" "rt_public_ass" {
   subnet_id      = aws_subnet.subnet_pub.id
   route_table_id = aws_route_table.rt-pub.id
