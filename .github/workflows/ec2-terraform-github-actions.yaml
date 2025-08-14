@@ -25,12 +25,9 @@ jobs:
       
       - name: Iniciando o terraform
         run: terraform init
-        working-directory: infra
       
       - name: Iniciando o plan do terraform
         run: terraform plan
-        working-directory: infra
 
       - name: Iniciando o apply
         run: terraform apply -auto-approve
-        working-directory: infra
