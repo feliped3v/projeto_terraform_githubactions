@@ -16,6 +16,7 @@ resource "aws_instance" "webserver" {
   instance_type          = "t3.micro"
   subnet_id = aws_subnet.subnet_pub.id
   vpc_security_group_ids = [aws_security_group.acesso_webserver.id]
+  associate_public_ip_address = true
   user_data = file("ec2-data.sh")
 
   tags = {
@@ -25,7 +26,7 @@ resource "aws_instance" "webserver" {
 
 resource "aws_vpc" "main_vpc" {
   cidr_block = "10.0.0.0/16"
-
+  
   tags = {
     Name = "main-vpc"
   }
@@ -43,6 +44,7 @@ resource "aws_subnet" "subnet_priv" {
 resource "aws_subnet" "subnet_pub" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.2.0/24"
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "subnet_pub"
@@ -76,4 +78,34 @@ resource "aws_security_group" "acesso_webserver" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main_vpc.id
+
+  tags = {
+    Name = "main"
+  }
+}
+
+resource "aws_route_table" "rt-pub" {
+  vpc_id = aws_vpc.main_vpc.id
+
+  route = {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = {
+    Name = "rt-pub"
+  }
+}
+
+resource "aws_route_table_association" "rt_public_ass" {
+  subnet_id      = aws_subnet_pub.subnet_pub.id
+  route_table_id = aws_route_table.rt-pub.id
+}
+
+output "public_ip" {
+  value = aws_instance.webserver.public_ip
+  description = "IP público da instância EC2"
 }
