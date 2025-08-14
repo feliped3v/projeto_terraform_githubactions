@@ -15,7 +15,7 @@ resource "aws_instance" "webserver" {
   ami                    = "ami-0de716d6197524dd9"
   instance_type          = "t3.micro"
   subnet_id = aws_subnet.subnet_pub.id
-  vpc_security_group_ids = aws_security_group.acesso_webserver.id
+  vpc_security_group_ids = [aws_security_group.acesso_webserver.id]
   user_data = file("ec2-data.sh")
 
   tags = {
