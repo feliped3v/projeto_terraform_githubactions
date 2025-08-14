@@ -51,6 +51,7 @@ resource "aws_subnet" "subnet_pub" {
 resource "aws_security_group" "acesso_webserver" {
   name        = "acesso_ssh_http"
   description = "Permite acesso SSH e HTTP a instância"
+  vpc_id      = aws_vpc.main_vpc.id
 
   ingress {
     description = "SSH"
